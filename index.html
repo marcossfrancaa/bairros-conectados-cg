@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bairros Conectados CG</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --verde: #22c55e;
+    --verde-dark: #16a34a;
+    --verde-glow: #4ade80;
+    --bg: #080d0a;
+    --bg2: #0d1510;
+    --bg3: #111a14;
+    --card: #121a14;
+    --card-hover: #182015;
+    --border: rgba(34,197,94,0.18);
+    --border-hover: rgba(34,197,94,0.45);
+    --text: #f0faf3;
+    --muted: #7aab88;
+    --wa-green: #25D366;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Barlow', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+
+  /* ===== NAVBAR ===== */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 1rem 2.5rem;
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(8,13,10,0.88); backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(34,197,94,0.1);
+  }
+  .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 0.06em; color: var(--text); }
+  .nav-logo span { color: var(--verde); }
+  .nav-links { display: flex; gap: 2.5rem; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.85rem; font-weight: 500; letter-spacing: 0.05em; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--verde); }
+
+  /* ===== HERO ===== */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+    padding: 7rem 2rem 5rem;
+    text-align: center;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 90% 65% at 50% 0%, rgba(34,197,94,0.13) 0%, transparent 68%),
+      radial-gradient(ellipse 50% 35% at 85% 85%, rgba(34,197,94,0.05) 0%, transparent 55%),
+      linear-gradient(180deg, #080d0a 0%, #0a1209 100%);
+  }
+  .grid-lines {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(34,197,94,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(34,197,94,0.035) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse 85% 75% at 50% 40%, black 20%, transparent 75%);
+  }
+  .hero-tag {
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.28em; text-transform: uppercase;
+    color: var(--verde); background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.28);
+    padding: 0.45rem 1.1rem; border-radius: 100px; margin-bottom: 2rem;
+    position: relative; z-index: 1; animation: fadeUp 0.55s ease both;
+  }
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif; font-size: clamp(4rem, 11vw, 7.5rem);
+    line-height: 0.9; letter-spacing: 0.015em;
+    position: relative; z-index: 1; animation: fadeUp 0.65s 0.08s ease both;
+  }
+  .hero h1 span { color: var(--verde); display: block; }
+  .hero-sub {
+    font-size: 1.1rem; color: var(--muted); max-width: 460px; line-height: 1.65;
+    margin: 2rem 0 3rem; position: relative; z-index: 1; animation: fadeUp 0.65s 0.16s ease both;
+  }
+  .hero-cta {
+    display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
+    position: relative; z-index: 1; animation: fadeUp 0.65s 0.24s ease both;
+  }
+  .btn-primary {
+    background: var(--verde); color: #000; font-family: 'Barlow', sans-serif; font-weight: 700;
+    font-size: 0.95rem; padding: 0.85rem 2rem; border-radius: 8px; text-decoration: none;
+    transition: all 0.2s; display: flex; align-items: center; gap: 0.5rem; border: none; cursor: pointer;
+  }
+  .btn-primary:hover { background: var(--verde-glow); transform: translateY(-2px); }
+  .btn-outline {
+    background: transparent; color: var(--verde); font-family: 'Barlow', sans-serif; font-weight: 600;
+    font-size: 0.95rem; padding: 0.85rem 2rem; border-radius: 8px; text-decoration: none;
+    border: 1.5px solid rgba(34,197,94,0.35); transition: all 0.2s; display: flex; align-items: center; gap: 0.5rem; cursor: pointer;
+  }
+  .btn-outline:hover { border-color: var(--verde); background: rgba(34,197,94,0.07); }
+  .scroll-hint {
+    position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+    color: var(--muted); font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; z-index: 1;
+    display: flex; flex-direction: column; align-items: center; gap: 0.6rem;
+    animation: bounce 2.2s ease-in-out infinite;
+  }
+  .scroll-hint svg { width: 18px; opacity: 0.4; }
+  @keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(7px)} }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ===== STATS BAR ===== */
+  .stats-bar {
+    background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    padding: 2rem; display: flex; justify-content: center; gap: 5rem; flex-wrap: wrap;
+  }
+  .stat-item { text-align: center; }
+  .stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 2.4rem; color: var(--verde); line-height: 1; }
+  .stat-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; margin-top: 0.3rem; }
+
+  /* ===== SECTIONS ===== */
+  .section-wrap { padding: 6rem 2rem; max-width: 1100px; margin: 0 auto; }
+  .section-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.32em; text-transform: uppercase; color: var(--verde); margin-bottom: 0.8rem; }
+  .section-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.4rem, 5vw, 3.8rem); line-height: 0.95; margin-bottom: 1.1rem; }
+  .section-sub { color: var(--muted); font-size: 1rem; line-height: 1.65; max-width: 480px; }
+
+  /* ===== BAIRROS ===== */
+  .bairros-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 2.5rem; flex-wrap: wrap; gap: 1.2rem; }
+  .search-bar {
+    display: flex; align-items: center; gap: 0.75rem; background: var(--bg3);
+    border: 1px solid var(--border); border-radius: 8px; padding: 0.65rem 1.1rem; min-width: 240px;
+  }
+  .search-bar svg { width: 15px; opacity: 0.35; flex-shrink: 0; }
+  .search-bar input { background: none; border: none; outline: none; color: var(--text); font-family: 'Barlow', sans-serif; font-size: 0.9rem; width: 100%; }
+  .search-bar input::placeholder { color: var(--muted); }
+
+  .bairros-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 1.1rem; }
+  .bairro-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 1.6rem;
+    display: flex; flex-direction: column; gap: 1.1rem; transition: all 0.25s;
+    text-decoration: none; color: inherit; position: relative; overflow: hidden;
+  }
+  .bairro-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--verde), transparent);
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .bairro-card:hover { border-color: var(--border-hover); background: var(--card-hover); transform: translateY(-3px); }
+  .bairro-card:hover::before { opacity: 1; }
+  .bairro-card.destaque { border-color: rgba(34,197,94,0.42); background: linear-gradient(140deg, #0e1d11 0%, #121f14 100%); }
+  .bairro-card.destaque::before { opacity: 1; }
+
+  .bairro-header-row { display: flex; align-items: center; justify-content: space-between; }
+  .bairro-icon {
+    width: 44px; height: 44px; border-radius: 10px; background: rgba(34,197,94,0.1);
+    border: 1px solid rgba(34,197,94,0.18); display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+  }
+  .badge-ativo {
+    font-size: 0.63rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    background: rgba(34,197,94,0.14); color: var(--verde); border: 1px solid rgba(34,197,94,0.3);
+    padding: 0.28rem 0.65rem; border-radius: 100px;
+  }
+  .badge-em-breve {
+    font-size: 0.63rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    background: rgba(255,200,50,0.07); color: #e0b030; border: 1px solid rgba(255,200,50,0.18);
+    padding: 0.28rem 0.65rem; border-radius: 100px;
+  }
+  .bairro-name { font-family: 'Barlow Condensed', sans-serif; font-size: 1.35rem; font-weight: 700; line-height: 1.1; letter-spacing: 0.02em; }
+  .bairro-desc { font-size: 0.83rem; color: var(--muted); line-height: 1.55; }
+  .bairro-meta { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+  .bairro-tag { font-size: 0.71rem; color: var(--muted); background: rgba(255,255,255,0.035); border: 1px solid rgba(255,255,255,0.065); padding: 0.22rem 0.55rem; border-radius: 4px; }
+  .bairro-footer { display: flex; align-items: center; justify-content: space-between; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1rem; margin-top: auto; }
+  .membros { font-size: 0.77rem; color: var(--muted); display: flex; align-items: center; gap: 0.45rem; }
+  .membros-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--verde); animation: blink-dot 2s ease-in-out infinite; flex-shrink: 0; }
+  @keyframes blink-dot { 0%,100%{ opacity:1; box-shadow: 0 0 5px var(--verde); } 50%{ opacity:0.3; box-shadow: none; } }
+
+  .btn-entrar {
+    background: var(--wa-green); color: #fff; font-family: 'Barlow', sans-serif; font-weight: 700;
+    font-size: 0.8rem; padding: 0.5rem 1.1rem; border-radius: 7px; text-decoration: none;
+    display: flex; align-items: center; gap: 0.45rem; transition: all 0.2s; border: none; cursor: pointer;
+  }
+  .btn-entrar:hover { filter: brightness(1.12); transform: scale(1.03); }
+  .btn-entrar.disabled { background: rgba(255,255,255,0.055); color: rgba(122,171,136,0.5); pointer-events: none; cursor: default; }
+  .btn-entrar svg { width: 14px; flex-shrink: 0; }
+
+  /* ===== COMO FUNCIONA ===== */
+  .section-alt { background: var(--bg2); }
+  .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1.4rem; margin-top: 3rem; }
+  .step { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.8rem 1.5rem; }
+  .step-num { font-family: 'Bebas Neue', sans-serif; font-size: 3.2rem; color: rgba(34,197,94,0.13); line-height: 1; margin-bottom: 1rem; }
+  .step-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.5rem; }
+  .step-text { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+
+  /* ===== REGRAS ===== */
+  .regras-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 1rem; margin-top: 2.5rem; }
+  .regra-ok, .regra-nao { padding: 1.2rem 1.1rem; border-radius: 10px; font-size: 0.85rem; line-height: 1.5; display: flex; gap: 0.65rem; align-items: flex-start; }
+  .regra-ok { background: rgba(34,197,94,0.065); border: 1px solid rgba(34,197,94,0.18); }
+  .regra-nao { background: rgba(239,68,68,0.055); border: 1px solid rgba(239,68,68,0.14); }
+  .regra-icon { flex-shrink: 0; margin-top: 0.05rem; }
+
+  /* ===== FOOTER ===== */
+  footer { background: var(--bg2); border-top: 1px solid var(--border); text-align: center; padding: 3.5rem 2rem; }
+  .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 0.1em; margin-bottom: 0.6rem; }
+  .footer-logo span { color: var(--verde); }
+  .footer-sub { color: var(--muted); font-size: 0.85rem; margin-bottom: 1.8rem; }
+  .footer-copy { color: rgba(122,171,136,0.35); font-size: 0.74rem; }
+
+  /* ===== WHATSAPP FLOAT ===== */
+  .wa-float {
+    position: fixed; bottom: 1.75rem; right: 1.75rem; z-index: 200;
+    background: var(--wa-green); width: 58px; height: 58px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; text-decoration: none;
+    animation: wa-pulse 2s ease-in-out infinite;
+  }
+  .wa-float:hover { animation: none; transform: scale(1.12); box-shadow: 0 6px 32px rgba(37,211,102,0.55); }
+  .wa-float svg { width: 28px; }
+  @keyframes wa-pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(37,211,102,0.6), 0 4px 18px rgba(37,211,102,0.35); }
+    50%  { box-shadow: 0 0 0 14px rgba(37,211,102,0), 0 4px 18px rgba(37,211,102,0.35); }
+    100% { box-shadow: 0 0 0 0 rgba(37,211,102,0), 0 4px 18px rgba(37,211,102,0.35); }
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 640px) {
+    .nav-links { display: none; }
+    .stats-bar { gap: 2.5rem; }
+    .bairros-header { flex-direction: column; align-items: flex-start; }
+    .hero h1 { font-size: 3.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="nav-logo">BAIRROS <span>CONECTADOS</span> CG</div>
+  <div class="nav-links">
+    <a href="#bairros">Bairros</a>
+    <a href="#como-funciona">Como funciona</a>
+    <a href="#regras">Regras</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="grid-lines"></div>
+  <div class="hero-tag">📍 Campo Grande · MS</div>
+  <h1>BAIRROS<span>CONECTADOS</span></h1>
+  <p class="hero-sub">Grupos de WhatsApp organizados por bairro. Compras, serviços, indicações e comunidade — tudo pertinho de você.</p>
+  <div class="hero-cta">
+    <a href="#bairros" class="btn-primary">
+      <svg viewBox="0 0 24 24" fill="currentColor" width="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm.029 18.88a9.916 9.916 0 01-4.744-1.21l-.34-.203-3.527.924.941-3.438-.222-.352A9.935 9.935 0 012.07 12c0-5.483 4.476-9.951 9.959-9.951 5.484 0 9.952 4.468 9.952 9.951 0 5.484-4.468 9.88-9.952 9.88z"/></svg>
+      Entrar no seu bairro
+    </a>
+    <a href="#como-funciona" class="btn-outline">Como funciona</a>
+  </div>
+  <div class="scroll-hint">
+    <span>Role para ver</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 10l5 5 5-5"/></svg>
+  </div>
+</div>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stat-item"><div class="stat-num">8</div><div class="stat-label">Bairros cadastrados</div></div>
+  <div class="stat-item"><div class="stat-num">100%</div><div class="stat-label">Gratuito para entrar</div></div>
+  <div class="stat-item"><div class="stat-num">24h</div><div class="stat-label">Comunidade ativa</div></div>
+  <div class="stat-item"><div class="stat-num">CG</div><div class="stat-label">Campo Grande · MS</div></div>
+</div>
+
+<!-- BAIRROS -->
+<div id="bairros">
+<div class="section-wrap">
+  <div class="bairros-header">
+    <div>
+      <div class="section-label">Grupos ativos</div>
+      <div class="section-title">ESCOLHA<br>SEU BAIRRO</div>
+    </div>
+    <div class="search-bar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" placeholder="Buscar bairro..." id="searchInput" oninput="filtrarBairros()">
+    </div>
+  </div>
+  <div class="bairros-grid" id="bairrosGrid">
+
+    <!-- José Abrão - ATIVO -->
+    <div class="bairro-card destaque">
+      <div class="bairro-header-row"><div class="bairro-icon">🏡</div><span class="badge-ativo">⚡ Ativo</span></div>
+      <div><div class="bairro-name">Conjunto José Abrão</div><div class="bairro-desc">O grupo pioneiro. Compras, vendas, serviços e toda a comunidade do José Abrão conectada.</div></div>
+      <div class="bairro-meta"><span class="bairro-tag">🛒 Compras</span><span class="bairro-tag">🔧 Serviços</span><span class="bairro-tag">🤝 Indicações</span></div>
+      <div class="bairro-footer">
+        <div class="membros"><div class="membros-dot"></div>Comunidade ativa</div>
+        <a href="https://chat.whatsapp.com/IzD3oXnNCpZIANm1TyFwaT" class="btn-entrar" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm.029 18.88a9.916 9.916 0 01-4.744-1.21l-.34-.203-3.527.924.941-3.438-.222-.352A9.935 9.935 0 012.07 12c0-5.483 4.476-9.951 9.959-9.951 5.484 0 9.952 4.468 9.952 9.951 0 5.484-4.468 9.88-9.952 9.88z"/></svg>
+          Entrar
+        </a>
+      </div>
+    </div>
+
+    <!-- Coopasul -->
+    <div class="bairro-card">
+      <div class="bairro-header-row"><div class="bairro-icon">🌿</div><span class="badge-em-breve">Em breve</span></div>
+      <div><div class="bairro-name">Coopasul</div><div class="bairro-desc">Vizinhança conectada no Coopasul. Divulgue seu negócio e encontre serviços do bairro.</div></div>
+      <div class="bairro-meta"><span class="bairro-tag">🛒 Compras</span><span class="bairro-tag">📢 Serviços</span></div>
+      <div class="bairro-footer"><div class="membros" style="color:#e0b030;">⏳ Em breve</div><span class="btn-entrar disabled">Em breve</span></div>
+    </div>
+
+    <!-- Vila Nasser -->
+    <div class="bairro-card">
+      <div class="bairro-header-row"><div class="bairro-icon">🏘️</div><span class="badge-em-breve">Em breve</span></div>
+      <div><div class="bairro-name">Vila Nasser</div><div class="bairro-desc">Grupo exclusivo para moradores do Vila Nasser e regiões vizinhas.</div></div>
+      <div class="bairro-meta"><span class="bairro-tag">🛒 Compras</span><span class="bairro-tag">🔧 Serviços</span><span class="bairro-tag">🚨 Segurança</span></div>
+      <div class="bairro-footer"><div class="membros" style="color:#e0b030;">⏳ Em breve</div><span class="btn-entrar disabled">Em breve</span></div>
+    </div>
+
+    <!-- Santa Emília -->
+    <div class="bairro-card">
+      <div class="bairro-header-row"><div class="bairro-icon">🌺</div><span class="badge-em-breve">Em breve</span></div>
+      <div><div class="bairro-name">Santa Emília</div><div class="bairro-desc">Compras, vendas e serviços para quem mora no Santa Emília e arredores.</div></div>
+      <div class="bairro-meta"><span class="bairro-tag">🛒 Compras</span><span class="bairro-tag">🤝 Indicações</span></div>
+      <div class="bairro-footer"><div class="membros" style="color:#e0b030;">⏳ Em breve</div><span class="btn-entrar disabled">Em breve</span></div>
+    </div>
+
+    <!-- Coophatrabalho -->
+    <div class="bairro-card">
+      <div class="bairro-header-row"><div class="bairro-icon">🏗️</div><span class="badge-em-breve">Em breve</span></div>
+      <div><div class="bairro-name">Coophatrabalho</div><div class="bairro-desc">Comunidade do Coophatrabalho para trocas, serviços e informações do bairro.</div></div>
+      <div class="bairro-meta"><span class="bairro-tag">📢 Serviços</span><span class="bairro-tag">🛒 Compras</span></div>
+      <div class="bairro-footer"><div class="membros" style="color:#e0b030;">⏳ Em breve</div><span class="btn-entrar disabled">Em breve</span></div>
+    </div>
+
+    <!-- Jardim das Virtudes -->
+    <div class="bairro-card">
+      <div class="bairro-header-row"><div class="bairro-icon">🌳</div><span class="badge-em-breve">Em breve</span></div>
+      <div><div class="bairro-name">Jardim das Virtudes</div><div class="bairro-desc">Grupo em preparação para os moradores do Jardim das Virtudes. Aguarde!</div></div>
+      <div class="bairro-meta"><span class="bairro-tag">🛒 Compras</span><span class="bairro-tag">📢 Serviços</span></div>
+      <div class="bairro-footer"><div class="membros" style="color:#e0b030;">⏳ Em breve</div><span class="btn-entrar disabled">Em breve</span></div>
+    </div>
+
+    <!-- Beija-Flor -->
+    <div class="bairro-card">
+      <div class="bairro-header-row"><div class="bairro-icon">🦋</div><span class="badge-em-breve">Em breve</span></div>
+      <div><div class="bairro-name">Beija-Flor</div><div class="bairro-desc">Vizinhança do Beija-Flor em breve conectada. Fique de olho!</div></div>
+      <div class="bairro-meta"><span class="bairro-tag">🤝 Comunidade</span></div>
+      <div class="bairro-footer"><div class="membros" style="color:#e0b030;">⏳ Em breve</div><span class="btn-entrar disabled">Em breve</span></div>
+    </div>
+
+    <!-- Aero Rancho -->
+    <div class="bairro-card">
+      <div class="bairro-header-row"><div class="bairro-icon">✈️</div><span class="badge-em-breve">Em breve</span></div>
+      <div><div class="bairro-name">Aero Rancho</div><div class="bairro-desc">Um dos maiores bairros de CG em breve com seu grupo oficial conectado.</div></div>
+      <div class="bairro-meta"><span class="bairro-tag">🛒 Compras</span><span class="bairro-tag">🔧 Serviços</span></div>
+      <div class="bairro-footer"><div class="membros" style="color:#e0b030;">⏳ Em breve</div><span class="btn-entrar disabled">Em breve</span></div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<!-- COMO FUNCIONA -->
+<div class="section-alt" id="como-funciona">
+  <div class="section-wrap">
+    <div class="section-label">Simples assim</div>
+    <div class="section-title">COMO FUNCIONA</div>
+    <div class="section-sub">Em menos de 1 minuto você já está conectado com o seu bairro.</div>
+    <div class="steps-grid">
+      <div class="step"><div class="step-num">01</div><div class="step-title">Ache seu bairro</div><div class="step-text">Procure o grupo do seu bairro na lista ou use a busca.</div></div>
+      <div class="step"><div class="step-num">02</div><div class="step-title">Clique em Entrar</div><div class="step-text">O botão te leva direto pro grupo no WhatsApp. Grátis, sem cadastro.</div></div>
+      <div class="step"><div class="step-num">03</div><div class="step-title">Participe</div><div class="step-text">Venda, compre, indique, pergunte. A comunidade do bairro na sua mão.</div></div>
+      <div class="step"><div class="step-num">04</div><div class="step-title">Espalhe</div><div class="step-text">Marque seus vizinhos e ajude o grupo crescer. Quanto mais, melhor!</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- REGRAS -->
+<div id="regras">
+<div class="section-wrap">
+  <div class="section-label">Comunidade saudável</div>
+  <div class="section-title">REGRAS DO GRUPO</div>
+  <div class="section-sub">Para que todo mundo aproveite bem, seguimos estas regras simples.</div>
+  <div class="regras-grid">
+    <div class="regra-ok"><span class="regra-icon">✅</span><span>Divulgar serviços e negócios locais</span></div>
+    <div class="regra-ok"><span class="regra-icon">✅</span><span>Comprar e vender produtos usados ou novos</span></div>
+    <div class="regra-ok"><span class="regra-icon">✅</span><span>Pedir e dar indicações de profissionais</span></div>
+    <div class="regra-ok"><span class="regra-icon">✅</span><span>Informações úteis sobre o bairro</span></div>
+    <div class="regra-ok"><span class="regra-icon">✅</span><span>Alertas de segurança da vizinhança</span></div>
+    <div class="regra-nao"><span class="regra-icon">❌</span><span>Política, religião e polêmicas</span></div>
+    <div class="regra-nao"><span class="regra-icon">❌</span><span>Fake news e correntes</span></div>
+    <div class="regra-nao"><span class="regra-icon">❌</span><span>Spam excessivo ou repetido</span></div>
+    <div class="regra-nao"><span class="regra-icon">❌</span><span>Ofensas e brigas</span></div>
+    <div class="regra-nao"><span class="regra-icon">❌</span><span>Conteúdo adulto ou impróprio</span></div>
+  </div>
+</div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">BAIRROS <span>CONECTADOS</span> CG</div>
+  <div class="footer-sub">Campo Grande · Mato Grosso do Sul · Brasil</div>
+  <div class="footer-copy">© <span id="anoAtual"></span> Bairros Conectados CG — Todos os direitos reservados</div>
+</footer>
+
+<!-- WHATSAPP FLOAT -->
+<a href="https://chat.whatsapp.com/IzD3oXnNCpZIANm1TyFwaT" class="wa-float" target="_blank" rel="noopener noreferrer" title="Entrar no grupo do José Abrão">
+  <svg viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm.029 18.88a9.916 9.916 0 01-4.744-1.21l-.34-.203-3.527.924.941-3.438-.222-.352A9.935 9.935 0 012.07 12c0-5.483 4.476-9.951 9.959-9.951 5.484 0 9.952 4.468 9.952 9.951 0 5.484-4.468 9.88-9.952 9.88z"/></svg>
+</a>
+
+<script>
+// Ano dinâmico - atualiza automaticamente
+document.getElementById('anoAtual').textContent = new Date().getFullYear();
+
+// Filtro de busca de bairros
+function filtrarBairros() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  document.querySelectorAll('.bairro-card').forEach(card => {
+    const nome = card.querySelector('.bairro-name').textContent.toLowerCase();
+    card.style.display = nome.includes(q) ? '' : 'none';
+  });
+}
+</script>
+</body>
+</html>
