@@ -231,6 +231,56 @@
   .section-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.4rem, 5vw, 3.9rem); line-height: 0.95; margin-bottom: 1.1rem; }
   .section-sub { color: var(--muted); font-size: 1rem; line-height: 1.7; max-width: 560px; }
 
+  /* ===== POR QUE ENTRAR ===== */
+  .why-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 2.1rem;
+  }
+  .why-card {
+    background: linear-gradient(180deg, rgba(18,26,20,0.98), rgba(12,19,15,0.98));
+    border: 1px solid rgba(34,197,94,0.12);
+    border-radius: 18px;
+    padding: 1.35rem 1.2rem;
+    box-shadow: 0 16px 36px rgba(0,0,0,0.14);
+  }
+  .why-card:nth-child(2n) { transform: translateY(10px); }
+  .why-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    background: rgba(34,197,94,0.1);
+    border: 1px solid rgba(34,197,94,0.15);
+    margin-bottom: 1rem;
+    font-size: 1.15rem;
+  }
+  .why-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    margin-bottom: 0.4rem;
+  }
+  .why-text {
+    color: var(--muted);
+    font-size: 0.87rem;
+    line-height: 1.65;
+  }
+  .why-cta {
+    margin-top: 1.4rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--verde);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
   /* ===== BAIRROS ===== */
   .bairros-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 2.5rem; flex-wrap: wrap; gap: 1.2rem; }
   .search-bar {
@@ -259,6 +309,13 @@
   .bairro-card:hover::before { opacity: 1; }
   .bairro-card.destaque { border-color: rgba(34,197,94,0.42); background: linear-gradient(140deg, #0e1d11 0%, #121f14 100%); }
   .bairro-card.destaque::before { opacity: 1; }
+  .bairro-card.destaque {
+    box-shadow:
+      0 0 0 1px rgba(34,197,94,0.12),
+      0 24px 60px rgba(0,0,0,0.28),
+      0 0 40px rgba(34,197,94,0.08);
+    animation: destaque-float 3.2s ease-in-out infinite;
+  }
 
   .bairro-header-row { display: flex; align-items: center; justify-content: space-between; }
   .bairro-icon {
@@ -266,9 +323,21 @@
     border: 1px solid rgba(34,197,94,0.18); display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
   }
   .badge-ativo {
+    position: relative;
+    overflow: hidden;
     font-size: 0.63rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
     background: rgba(34,197,94,0.14); color: var(--verde); border: 1px solid rgba(34,197,94,0.3);
     padding: 0.28rem 0.65rem; border-radius: 100px;
+    box-shadow: 0 0 0 1px rgba(34,197,94,0.08), 0 8px 24px rgba(34,197,94,0.12);
+    animation: badge-glow 2.2s ease-in-out infinite;
+  }
+  .badge-ativo::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-120%);
+    background: linear-gradient(110deg, transparent, rgba(255,255,255,0.26), transparent);
+    animation: badge-shine 2.8s ease-in-out infinite;
   }
   .badge-em-breve {
     font-size: 0.63rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
@@ -283,6 +352,9 @@
   .membros { font-size: 0.77rem; color: var(--muted); display: flex; align-items: center; gap: 0.45rem; }
   .membros-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--verde); animation: blink-dot 2s ease-in-out infinite; flex-shrink: 0; }
   @keyframes blink-dot { 0%,100%{ opacity:1; box-shadow: 0 0 5px var(--verde); } 50%{ opacity:0.3; box-shadow: none; } }
+  @keyframes destaque-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+  @keyframes badge-glow { 0%, 100% { box-shadow: 0 0 0 1px rgba(34,197,94,0.08), 0 8px 24px rgba(34,197,94,0.12); } 50% { box-shadow: 0 0 0 1px rgba(34,197,94,0.18), 0 10px 28px rgba(34,197,94,0.2); } }
+  @keyframes badge-shine { 0% { transform: translateX(-120%); } 45% { transform: translateX(120%); } 100% { transform: translateX(120%); } }
 
   .btn-entrar {
     background: var(--wa-green); color: #fff; font-family: 'Barlow', sans-serif; font-weight: 700;
@@ -359,6 +431,8 @@
     .hero-mini-stats { grid-template-columns: 1fr; }
     .stats-bar { grid-template-columns: 1fr 1fr; gap: 0.7rem; padding: 0.8rem; margin-top: -0.9rem; }
     .stat-item { padding: 1rem 0.6rem; }
+    .why-grid { grid-template-columns: 1fr; }
+    .why-card:nth-child(2n) { transform: none; }
     .section-wrap { padding: 4.75rem 1rem; }
     .bairros-header { flex-direction: column; align-items: flex-start; }
     .search-bar { width: 100%; min-width: 0; }
@@ -446,6 +520,39 @@
   <div class="stat-item"><div class="stat-num">100%</div><div class="stat-label">Gratuito para entrar</div></div>
   <div class="stat-item"><div class="stat-num">24h</div><div class="stat-label">Comunidade ativa</div></div>
   <div class="stat-item"><div class="stat-num">CG</div><div class="stat-label">Campo Grande · MS</div></div>
+</div>
+
+<!-- POR QUE ENTRAR -->
+<div class="section-wrap">
+  <div class="section-label">Escolha inteligente</div>
+  <div class="section-title">POR QUE ENTRAR AGORA</div>
+  <div class="section-sub">O site fica mais útil quando a pessoa entende rápido o valor de entrar no grupo do bairro.</div>
+  <div class="why-grid">
+    <div class="why-card">
+      <div class="why-icon">⚡</div>
+      <div class="why-title">Resposta mais rápida</div>
+      <div class="why-text">Quem entra vê ofertas, indicações e contatos locais em poucos segundos, sem ficar procurando.</div>
+      <div class="why-cta">Entrar e conferir</div>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">🤝</div>
+      <div class="why-title">Vizinhança útil</div>
+      <div class="why-text">O grupo conecta quem compra, vende e presta serviço na mesma região, deixando tudo mais prático.</div>
+      <div class="why-cta">Ver comunidade</div>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">📱</div>
+      <div class="why-title">Funciona em qualquer tela</div>
+      <div class="why-text">A navegação foi pensada para celular, tablet e TV, com botões grandes e leitura clara.</div>
+      <div class="why-cta">Abrir no WhatsApp</div>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">🌟</div>
+      <div class="why-title">Mais movimento no bairro</div>
+      <div class="why-text">Quanto mais gente entra, mais útil o grupo fica para promoções, avisos e recomendações.</div>
+      <div class="why-cta">Entrar agora</div>
+    </div>
+  </div>
 </div>
 
 <!-- BAIRROS -->
