@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://marcossfrancaa.github.io/bairros-conectados-cg/sitemap.xml
